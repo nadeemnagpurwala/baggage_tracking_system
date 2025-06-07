@@ -1,6 +1,7 @@
 package com.tracking.app.user;
-import java.sql.SQLException;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.tracking.app.database.Config;
 
@@ -31,7 +32,8 @@ public abstract class AbstractUserService implements UserOperations {
     }
 
     @Override
-    public void loginUser(String email, String password) throws SQLException {
+    public Map<String, String> loginUser(String email, String password) {
+        Map<String, String> response = new HashMap<>();
         try {
             String sql = "SELECT * FROM users WHERE email = ?";
             Connection connection = Config.getConnection();
@@ -43,15 +45,22 @@ public abstract class AbstractUserService implements UserOperations {
                 boolean isPasswordValid = this.validateUserPassword(password, storedHash);
                 if (isPasswordValid) {
                     System.out.println("Hi " + resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
+                    response.put("status", "success");
+                    response.put("message", "User logged in successfully.");
+                    response.put("role_id", resultSet.getString("role_id"));
                 } else {
-                    throw new SQLException("User not found. Please verify again with proper credentials.");
+                    response.put("status", "error");
+                    response.put("message", "User not found. Please verify again with proper credentials.");
                 }
             } else {
-                throw new SQLException("User not found. Please verify again with proper credentials.");
+                response.put("status", "error");
+                response.put("message", "User not found. Please verify again with proper credentials.");
             }
         } catch (SQLException e) {
-            throw e;
+            response.put("status", "error");
+            response.put("message", e.getMessage());
         }
+        return response;
     }
 
     private String encryptPassword(String password) {

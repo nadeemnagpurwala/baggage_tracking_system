@@ -1,7 +1,7 @@
 package com.tracking.app.user;
 import com.tracking.app.util.InputUtil;
-
 import java.sql.SQLException;
+import java.util.Map;
 
 public class UserManagement {
     private static final UserOperations userService = new UserService();
@@ -26,11 +26,11 @@ public class UserManagement {
         String email = InputUtil.readOption("Enter Email Address : ");
         isEmailAddressValid(email);
         String password = InputUtil.readOption("Enter Password : ");
-        try {
-            userService.loginUser(email, password);
-            System.out.println("User logged in successfully.");
-        } catch (SQLException e) {
-            System.out.println("Login failed: " + e.getMessage());
+        Map<String, String> result = userService.loginUser(email, password);
+        if ("success".equals(result.get("status"))) {
+            System.out.println(result.get("message"));
+        } else {
+            System.out.println("Login failed: " + result.get("message"));
         }
     }
 
