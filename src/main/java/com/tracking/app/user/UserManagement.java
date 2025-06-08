@@ -1,6 +1,7 @@
 package com.tracking.app.user;
 import com.tracking.app.util.InputUtil;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UserManagement {
@@ -22,16 +23,22 @@ public class UserManagement {
         }
     }
 
-    public void login() {
+    public Map<String, String>  login() {
         String email = InputUtil.readOption("Enter Email Address : ");
         isEmailAddressValid(email);
         String password = InputUtil.readOption("Enter Password : ");
         Map<String, String> result = userService.loginUser(email, password);
+        Map<String, String> loginResponse = new HashMap<>();
         if ("success".equals(result.get("status"))) {
             System.out.println(result.get("message"));
+            loginResponse.put("status", "success");
+            loginResponse.put("role_id", result.get("role_id"));
+            loginResponse.put("user_id", result.get("user_id"));
         } else {
             System.out.println("Login failed: " + result.get("message"));
+            loginResponse.put("status", "error");
         }
+        return loginResponse;
     }
 
     private void isEmailAddressValid(String email) {

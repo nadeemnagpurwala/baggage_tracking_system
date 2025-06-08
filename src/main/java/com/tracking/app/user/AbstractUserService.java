@@ -48,6 +48,7 @@ public abstract class AbstractUserService implements UserOperations {
                     response.put("status", "success");
                     response.put("message", "User logged in successfully.");
                     response.put("role_id", resultSet.getString("role_id"));
+                    response.put("user_id", resultSet.getString("id"));
                 } else {
                     response.put("status", "error");
                     response.put("message", "User not found. Please verify again with proper credentials.");
