@@ -1,4 +1,5 @@
 package com.tracking.app;
+import com.tracking.app.baggage.service.BaggageManagement;
 import com.tracking.app.util.InputUtil;
 import com.tracking.app.user.service.UserManagement;
 import java.util.Map;
@@ -20,8 +21,9 @@ public class Main {
                     Map<String, String> result = userManagement.login();
                     if ("success".equals(result.get("status"))) {
                         int roleId = Integer.parseInt(result.get("role_id"));
+                        int userId = Integer.parseInt(result.get("user_id"));
                         loggedIn = true;
-                        baggageOptions(roleId);
+                        baggageOptions(roleId, userId);
                     }
                     break;
                 case "3":
@@ -34,7 +36,8 @@ public class Main {
         }
     }
 
-    private static void baggageOptions(int roleId) {
+    private static void baggageOptions(int roleId, int userId) {
+        BaggageManagement baggageManagement = new BaggageManagement();
         while(loggedIn) {
             if (roleId == 1) {
                 System.out.println("1. View All Checked In Baggage");
@@ -70,7 +73,7 @@ public class Main {
                 String choice = InputUtil.readOption("Choose an option: ");
                 switch (choice) {
                     case "1":
-                        System.out.println("Check In Baggage");
+                        baggageManagement.checkInBaggage(userId);
                         break;
                     case "2":
                         System.out.println("Get Baggage Information");
