@@ -1,6 +1,6 @@
 package com.tracking.app;
 import com.tracking.app.util.InputUtil;
-import com.tracking.app.user.UserManagement;
+import com.tracking.app.user.service.UserManagement;
 import java.util.Map;
 
 public class Main {

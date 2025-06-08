@@ -1,4 +1,5 @@
-package com.tracking.app.user;
+package com.tracking.app.user.service;
+import com.tracking.app.user.model.User;
 import com.tracking.app.util.InputUtil;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,7 +17,8 @@ public class UserManagement {
         int userRole = Integer.parseInt(InputUtil.readOption("Enter User Role. Specify 1 for admin and 2 for user : "));
         isUserRoleValid(userRole);
         try {
-            userService.createUser(firstName, lastName, email, password, userRole);
+            User user = new User(firstName, lastName, email, password, userRole);
+            userService.createUser(user);
             System.out.println("User registered successfully. You can now proceed to login");
         } catch (SQLException e) {
             System.out.println("Registration failed: " + e.getMessage());

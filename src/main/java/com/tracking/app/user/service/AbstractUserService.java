@@ -1,24 +1,25 @@
-package com.tracking.app.user;
+package com.tracking.app.user.service;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.tracking.app.database.Config;
+import com.tracking.app.user.model.User;
 
 public abstract class AbstractUserService implements UserOperations {
     @Override
-    public void createUser(String firstName, String lastName, String email, String password, int role) throws SQLException {
+    public void createUser(User user) throws SQLException {
         try {
             String sql = "INSERT INTO users (first_name, last_name, email, password, role_id) VALUES (?, ?, ?, ?, ?)";
-            String hashedPassword = this.encryptPassword(password);
+            String hashedPassword = this.encryptPassword(user.getPassword());
 
             Connection connection = Config.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setString(3, email);
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, hashedPassword);
-            preparedStatement.setInt(5, role);
+            preparedStatement.setInt(5, user.getRoleId());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
