@@ -48,7 +48,7 @@ public class Main {
                 String choice = InputUtil.readOption("Choose an option: ");
                 switch (choice) {
                     case "1":
-                        System.out.println("View All Checked In Baggage");
+                        baggageManagement.getAllCheckedInBaggage();
                         break;
                     case "2":
                         System.out.println("Get Baggage Status");

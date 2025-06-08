@@ -12,4 +12,13 @@ public class BaggageManagement {
             System.out.println("Baggage check in failed: " + e.getMessage());
         }
     }
+
+    public void getAllCheckedInBaggage() {
+        try {
+            String status = "Checked In";
+            baggageService.getAllBaggagesByStatus(status);
+        } catch (SQLException e) {
+            System.out.println("Checked in baggage retrieval failed: " + e.getMessage());
+        }
+    }
 }

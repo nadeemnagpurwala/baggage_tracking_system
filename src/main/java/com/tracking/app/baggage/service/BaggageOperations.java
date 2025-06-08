@@ -4,4 +4,5 @@ import java.sql.SQLException;
 
 public interface BaggageOperations {
     void createNewBaggage(Baggage baggage) throws SQLException;
+    void getAllBaggagesByStatus(String status) throws SQLException;
 }
