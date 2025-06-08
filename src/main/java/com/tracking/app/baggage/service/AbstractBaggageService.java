@@ -48,7 +48,7 @@ public abstract class AbstractBaggageService implements BaggageOperations {
         ) {
             preparedStatement.setString(1, status);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                this.executeGetBaggageQuery(resultSet);
+                this.prepareResultForDisplay(resultSet);
             }
         } catch (SQLException e) {
             System.out.println("Error while retrieving baggage for the provided status: " + e.getMessage());
@@ -65,7 +65,7 @@ public abstract class AbstractBaggageService implements BaggageOperations {
         ) {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                this.executeGetBaggageQuery(resultSet);
+                this.prepareResultForDisplay(resultSet);
             }
         } catch (SQLException e) {
             System.out.println("Error while retrieving baggage for the provided id: " + e.getMessage());
@@ -83,7 +83,7 @@ public abstract class AbstractBaggageService implements BaggageOperations {
             preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, userId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                this.executeGetBaggageQuery(resultSet);
+                this.prepareResultForDisplay(resultSet);
             }
         } catch (SQLException e) {
             System.out.println("Error while retrieving baggage for the provided id and user ID: " + e.getMessage());
@@ -91,7 +91,7 @@ public abstract class AbstractBaggageService implements BaggageOperations {
         }
     }
 
-    private void executeGetBaggageQuery(ResultSet resultSet) throws SQLException {
+    private void prepareResultForDisplay(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) {
             System.out.println("No baggage found for the provided criteria.");
             return;
