@@ -16,9 +16,25 @@ public class BaggageManagement {
     public void getAllCheckedInBaggage() {
         try {
             String status = "Checked In";
-            baggageService.getAllBaggagesByStatus(status);
+            baggageService.getAllBaggageByStatus(status);
         } catch (SQLException e) {
             System.out.println("Checked in baggage retrieval failed: " + e.getMessage());
+        }
+    }
+
+    public void getBaggageByBaggageId(Integer baggageId) {
+        try {
+            baggageService.getBaggageById(baggageId);
+        } catch (SQLException e) {
+            System.out.println("Baggage retrieval by the provided id failed: " + e.getMessage());
+        }
+    }
+
+    public void getBaggageByBaggageIdForUser(Integer baggageId, Integer userId) {
+        try {
+            baggageService.getBaggageByIdAndUserId(baggageId, userId);
+        } catch (SQLException e) {
+            System.out.println("Baggage retrieval by the provided id failed: " + e.getMessage());
         }
     }
 }

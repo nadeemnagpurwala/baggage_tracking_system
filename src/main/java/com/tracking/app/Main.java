@@ -51,7 +51,8 @@ public class Main {
                         baggageManagement.getAllCheckedInBaggage();
                         break;
                     case "2":
-                        System.out.println("Get Baggage Status");
+                        int baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
+                        baggageManagement.getBaggageByBaggageId(baggageId);
                         break;
                     case "3":
                         System.out.println("Update Baggage Status");
@@ -76,8 +77,8 @@ public class Main {
                         baggageManagement.checkInBaggage(userId);
                         break;
                     case "2":
-                        System.out.println("Get Baggage Information");
-                        break;
+                        int baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
+                        baggageManagement.getBaggageByBaggageIdForUser(baggageId, userId);
                     case "3":
                         loggedIn = false;
                         break;

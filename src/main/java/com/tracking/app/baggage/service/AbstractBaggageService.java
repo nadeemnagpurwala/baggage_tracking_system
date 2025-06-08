@@ -1,18 +1,21 @@
 package com.tracking.app.baggage.service;
 import java.sql.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import com.tracking.app.database.Config;
 import com.tracking.app.baggage.model.Baggage;
 
-public abstract class AbstractBaggageService implements BaggageOperations{
+public abstract class AbstractBaggageService implements BaggageOperations {
+
     @Override
     public void createNewBaggage(Baggage baggage) throws SQLException {
-        try {
-            String sql = "INSERT INTO baggage (location, status, user_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO baggage (location, status, user_id) VALUES (?, ?, ?)";
+        try (
             Connection connection = Config.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        ) {
             preparedStatement.setString(1, baggage.getLocation());
             preparedStatement.setString(2, baggage.getStatus());
             preparedStatement.setInt(3, baggage.getUserId());
@@ -21,59 +24,123 @@ public abstract class AbstractBaggageService implements BaggageOperations{
             if (affectedRows == 0) {
                 throw new SQLException("Your baggage was not checked in successfully. Please try again.");
             }
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                long generatedId = generatedKeys.getLong(1);
-                System.out.println("Your baggage was checked in successfully with the id " + generatedId);
-            } else {
-                throw new SQLException("Your baggage was not checked in successfully. Please try again.");
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long generatedId = generatedKeys.getLong(1);
+                    System.out.println("Your baggage was checked in successfully with the id " + generatedId);
+                } else {
+                    throw new SQLException("Your baggage was not checked in successfully. Please try again.");
+                }
             }
-            preparedStatement.close();
         } catch (SQLException e) {
-            System.out.println("Error during check in for your baggage" + e.getMessage());
+            System.out.println("Error during check-in for your baggage: " + e.getMessage());
             throw e;
         }
     }
 
-    public void getAllBaggagesByStatus(String status) throws SQLException {
-        try {
-            String sql = "SELECT * FROM baggage WHERE status = ?";
+    @Override
+    public void getAllBaggageByStatus(String status) throws SQLException {
+        String sql = "SELECT * FROM baggage WHERE status = ?";
+        try (
             Connection connection = Config.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
             preparedStatement.setString(1, status);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                // Map database columns to custom headers
-                Map<String, String> columnHeaderMap = new LinkedHashMap<>();
-                columnHeaderMap.put("id", "Claim ID");
-                columnHeaderMap.put("location", "Location");
-                columnHeaderMap.put("status", "Status");
-                columnHeaderMap.put("user_id", "User ID");
-
-                System.out.println("Below is the list of baggage found.");
-
-                int colWidth = 20;
-
-                // Print custom headers
-                for (String dbCol : columnHeaderMap.keySet()) {
-                    System.out.printf("%-" + colWidth + "s", columnHeaderMap.get(dbCol));
-                }
-                System.out.println();
-
-                // Print rows
-                while (resultSet.next()) {
-                    for (String dbCol : columnHeaderMap.keySet()) {
-                        Object value = resultSet.getObject(dbCol);
-                        System.out.printf("%-" + colWidth + "s", value != null ? value.toString() : "NULL");
-                    }
-                    System.out.println();
-                }
-            } else {
-                System.out.println("No baggage found for the provided status.");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                this.executeGetBaggageQuery(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while retrieving baggage for the provided status" + e.getMessage());
+            System.out.println("Error while retrieving baggage for the provided status: " + e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public void getBaggageById(Integer id) throws SQLException {
+        String sql = "SELECT * FROM baggage WHERE id = ?";
+        try (
+            Connection connection = Config.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                this.executeGetBaggageQuery(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while retrieving baggage for the provided id: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public void getBaggageByIdAndUserId(Integer id, Integer userId) throws SQLException {
+        String sql = "SELECT status, location FROM baggage WHERE id = ? AND user_id = ?";
+        try (
+            Connection connection = Config.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(2, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                this.executeGetBaggageQuery(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while retrieving baggage for the provided id and user ID: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private void executeGetBaggageQuery(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            System.out.println("No baggage found for the provided criteria.");
+            return;
+        }
+
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        // Create a set of actual column names present in the ResultSet
+        Set<String> availableColumns = new HashSet<>();
+        for (int i = 1; i <= columnCount; i++) {
+            availableColumns.add(metaData.getColumnLabel(i).toLowerCase());
+        }
+
+        Map<String, String> filteredHeaderMap = getFilteredHeaderMap(availableColumns);
+
+        System.out.println("Below is the list of baggage found:");
+        int colWidth = 20;
+
+        // Print custom headers
+        for (String header : filteredHeaderMap.values()) {
+            System.out.printf("%-" + colWidth + "s", header);
+        }
+        System.out.println();
+        System.out.println("-".repeat(colWidth * filteredHeaderMap.size()));
+
+        // Print data rows
+        do {
+            for (String column : filteredHeaderMap.keySet()) {
+                Object value = resultSet.getObject(column);
+                System.out.printf("%-" + colWidth + "s", value != null ? value.toString() : "NULL");
+            }
+            System.out.println();
+        } while (resultSet.next());
+    }
+
+    private Map<String, String> getFilteredHeaderMap(Set<String> availableColumns) {
+        Map<String, String> columnHeaderMap = new LinkedHashMap<>();
+        columnHeaderMap.put("id", "Claim ID");
+        columnHeaderMap.put("location", "Location");
+        columnHeaderMap.put("status", "Status");
+        columnHeaderMap.put("user_id", "User ID");
+
+        Map<String, String> filteredHeaderMap = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : columnHeaderMap.entrySet()) {
+            if (availableColumns.contains(entry.getKey())) {
+                filteredHeaderMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return filteredHeaderMap;
     }
 }
