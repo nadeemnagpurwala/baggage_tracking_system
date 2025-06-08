@@ -30,6 +30,7 @@ public abstract class AbstractBaggageService implements BaggageOperations{
             }
             preparedStatement.close();
         } catch (SQLException e) {
+            System.out.println("Error during check in for your baggage" + e.getMessage());
             throw e;
         }
     }
@@ -49,8 +50,6 @@ public abstract class AbstractBaggageService implements BaggageOperations{
                 columnHeaderMap.put("status", "Status");
                 columnHeaderMap.put("user_id", "User ID");
 
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
                 System.out.println("Below is the list of baggage found.");
 
                 int colWidth = 20;
@@ -74,6 +73,7 @@ public abstract class AbstractBaggageService implements BaggageOperations{
             }
         } catch (SQLException e) {
             System.out.println("Error while retrieving baggage for the provided status" + e.getMessage());
+            throw e;
         }
     }
 }
