@@ -60,7 +60,9 @@ String password = "your_password";
 
 ### 3. Build and Run the Application
 
-Navigate to the project root and run : mvn exec:java
+Navigate to the project root and run :
+1. mvn clean install
+2. mvn exec:java
 
 You’ll see the main menu:
 1. Register
