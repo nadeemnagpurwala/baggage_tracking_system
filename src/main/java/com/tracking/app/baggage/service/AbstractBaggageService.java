@@ -92,45 +92,24 @@ public abstract class AbstractBaggageService implements BaggageOperations {
     }
 
     @Override
-    public void baggageStatusUpdate(Integer id, String baggageStatus) throws SQLException {
-        String sql = "UPDATE baggage SET status = ? WHERE id = ?";
+    public void baggageStatusAndLocationUpdate(Integer id, String baggageStatus, String baggageLocation) throws SQLException {
+        String sql = "UPDATE baggage SET status = ?, location = ? WHERE id = ?";
         try (
             Connection connection = Config.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             preparedStatement.setString(1, baggageStatus);
-            preparedStatement.setInt(2, id);
+            preparedStatement.setString(2, baggageLocation);
+            preparedStatement.setInt(3, id);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("The baggage status update failed. Please try again.");
+                throw new SQLException("The baggage status and location update failed. Please try again.");
             }
             else {
-                System.out.println("The baggage status was updated successfully.");
+                System.out.println("The baggage status and location was updated successfully.");
             }
         } catch (Exception e) {
-            System.out.println("Error during baggage status update: " + e.getMessage());
-            throw e;
-        }
-    }
-
-    @Override
-    public void baggageLocationUpdate(Integer id, String baggageLocation) throws SQLException {
-        String sql = "UPDATE baggage SET location = ? WHERE id = ?";
-        try (
-            Connection connection = Config.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
-            preparedStatement.setString(1, baggageLocation);
-            preparedStatement.setInt(2, id);
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("The baggage location update failed. Please try again.");
-            }
-            else {
-                System.out.println("The baggage location was updated successfully.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error during baggage location update: " + e.getMessage());
+            System.out.println("Error during baggage status and location update: " + e.getMessage());
             throw e;
         }
     }

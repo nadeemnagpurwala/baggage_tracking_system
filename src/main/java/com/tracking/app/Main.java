@@ -42,7 +42,7 @@ public class Main {
             if (roleId == 1) {
                 System.out.println("1. View All Checked In Baggage");
                 System.out.println("2. Get Baggage Status");
-                System.out.println("3. Update Baggage Status");
+                System.out.println("3. Update Baggage Status and Location");
                 System.out.println("4. Update Baggage Location");
                 System.out.println("5. Logout");
                 String choice = InputUtil.readOption("Choose an option: ");
@@ -58,12 +58,11 @@ public class Main {
                     case "3":
                         baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
                         String baggageStatus = InputUtil.readOption("Select a baggage status from Checked In, In Transit, Arrived, Ready for Pickup, Claimed: ");
-                        baggageManagement.updateBaggageStatus(baggageId, baggageStatus);
+                        String baggageLocation = InputUtil.readOption("Select a baggage location from Check In Area, Transit Area, Arrival Area, Pickup Area: ");
+                        baggageManagement.updateBaggageStatusAndLocation(baggageId, baggageStatus, baggageLocation);
                         break;
                     case "4":
-                        baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
-                        String baggageLocation = InputUtil.readOption("Select a baggage status from Check In Area, Transit Area, Arrival Area, Pickup Area: ");
-                        baggageManagement.updateBaggageLocation(baggageId, baggageLocation);
+                        System.out.println("Update Baggage Location");
                         break;
                     case "5":
                         loggedIn = false;

@@ -38,19 +38,11 @@ public class BaggageManagement {
         }
     }
 
-    public void updateBaggageStatus(Integer baggageId, String baggageStatus) {
+    public void updateBaggageStatusAndLocation(Integer baggageId, String baggageStatus, String baggageLocation) {
         try {
-            baggageService.baggageStatusUpdate(baggageId, baggageStatus);
+            baggageService.baggageStatusAndLocationUpdate(baggageId, baggageStatus, baggageLocation);
         } catch (SQLException e) {
-            System.out.println("Baggage status update for the provided id failed: " + e.getMessage());
-        }
-    }
-
-    public void updateBaggageLocation(Integer baggageId, String baggageLocation) {
-        try {
-            baggageService.baggageLocationUpdate(baggageId, baggageLocation);
-        } catch (SQLException e) {
-            System.out.println("Baggage location update for the provided id failed: " + e.getMessage());
+            System.out.println("Baggage status and location update for the provided id failed: " + e.getMessage());
         }
     }
 }
