@@ -134,6 +134,25 @@ public abstract class AbstractBaggageService implements BaggageOperations {
         }
     }
 
+    public void baggageSummary() throws SQLException{
+        String sql = "SELECT status, COUNT(*) AS count FROM baggage GROUP BY status";
+        try (
+            Connection connection = Config.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery()
+        ) {
+            System.out.println("Baggage Status Counts:");
+            while (resultSet.next()) {
+                String status = resultSet.getString("status");
+                int count = resultSet.getInt("count");
+                System.out.println(status + ": " + count);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching baggage status counts: " + e.getMessage());
+            throw e;
+        }
+    }
+
     private void prepareResultForDisplay(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) {
             System.out.println("No baggage found for the provided criteria.");

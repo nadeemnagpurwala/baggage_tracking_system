@@ -53,4 +53,12 @@ public class BaggageManagement {
             System.out.println("Baggage deletion for the provided id failed: " + e.getMessage());
         }
     }
+
+    public void getBaggageStatusSummary() {
+        try {
+            baggageService.baggageSummary();
+        } catch (SQLException e) {
+            System.out.println("Baggage summary retrieval failed: " + e.getMessage());
+        }
+    }
 }

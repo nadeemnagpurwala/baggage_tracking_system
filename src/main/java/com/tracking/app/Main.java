@@ -44,7 +44,8 @@ public class Main {
                 System.out.println("2. Get Baggage Status");
                 System.out.println("3. Update Baggage Status and Location");
                 System.out.println("4. Delete Claimed Baggage Record");
-                System.out.println("5. Logout");
+                System.out.println("5. Get Baggage Status Summary");
+                System.out.println("6. Logout");
                 String choice = InputUtil.readOption("Choose an option: ");
                 int baggageId;
                 switch (choice) {
@@ -66,6 +67,9 @@ public class Main {
                         baggageManagement.deleteClaimedBaggageRecord(baggageId);
                         break;
                     case "5":
+                        baggageManagement.getBaggageStatusSummary();
+                        break;
+                    case "6":
                         loggedIn = false;
                         break;
                     default:
