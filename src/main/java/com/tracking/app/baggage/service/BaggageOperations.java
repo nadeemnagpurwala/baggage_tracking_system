@@ -7,4 +7,6 @@ public interface BaggageOperations {
     void getAllBaggageByStatus(String status) throws SQLException;
     void getBaggageById(Integer id) throws SQLException;
     void getBaggageByIdAndUserId(Integer id, Integer userId) throws SQLException;
+    void baggageStatusUpdate(Integer id, String baggageStatus) throws SQLException;
+    void baggageLocationUpdate(Integer id, String baggageLocation) throws SQLException;
 }
