@@ -1,4 +1,6 @@
 package com.tracking.app;
+import com.tracking.app.baggage.enums.Location;
+import com.tracking.app.baggage.enums.Status;
 import com.tracking.app.baggage.service.BaggageManagement;
 import com.tracking.app.util.InputUtil;
 import com.tracking.app.user.service.UserManagement;
@@ -58,8 +60,21 @@ public class Main {
                         break;
                     case "3":
                         baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
-                        String baggageStatus = InputUtil.readOption("Select a baggage status from Checked In, In Transit, Arrived, Ready for Pickup, Claimed: ");
-                        String baggageLocation = InputUtil.readOption("Select a baggage location from Check In Area, Transit Area, Arrival Area, Pickup Area: ");
+                        String baggageStatus = InputUtil.readOption(
+                            "Select a baggage status from "
+                            + Status.CHECKED_IN.getValue() + ", "
+                            + Status.IN_TRANSIT.getValue() + ", "
+                            + Status.ARRIVED.getValue() + ", "
+                            + Status.READY_FOR_PICKUP.getValue() + ", "
+                            + Status.CLAIMED.getValue() + " : "
+                        );
+                        String baggageLocation = InputUtil.readOption(
+                            "Select a baggage location from"
+                            + Location.CHECK_IN_AREA.getValue() + ", "
+                            + Location.TRANSIT_AREA.getValue() + ", "
+                            + Location.ARRIVAL_AREA.getValue() + ", "
+                            + Location.PICKUP_AREA.getValue() + " : "
+                        );
                         baggageManagement.updateBaggageStatusAndLocation(baggageId, baggageStatus, baggageLocation);
                         break;
                     case "4":

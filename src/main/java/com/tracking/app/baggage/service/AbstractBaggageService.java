@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.tracking.app.baggage.enums.Status;
 import com.tracking.app.database.Config;
 import com.tracking.app.baggage.model.Baggage;
 
@@ -121,7 +123,7 @@ public abstract class AbstractBaggageService implements BaggageOperations {
             PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             preparedStatement.setInt(1, baggageId);
-            preparedStatement.setString(2, "Claimed");
+            preparedStatement.setString(2, Status.CLAIMED.getValue());
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("The baggage deletion failed as the status is not yet claimed or the baggage does not exists. Please try again later.");
