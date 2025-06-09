@@ -45,4 +45,12 @@ public class BaggageManagement {
             System.out.println("Baggage status and location update for the provided id failed: " + e.getMessage());
         }
     }
+
+    public void deleteClaimedBaggageRecord(Integer baggageId) {
+        try {
+            baggageService.deleteClaimedBaggage(baggageId);
+        } catch (SQLException e) {
+            System.out.println("Baggage deletion for the provided id failed: " + e.getMessage());
+        }
+    }
 }

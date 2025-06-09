@@ -43,7 +43,7 @@ public class Main {
                 System.out.println("1. View All Checked In Baggage");
                 System.out.println("2. Get Baggage Status");
                 System.out.println("3. Update Baggage Status and Location");
-                System.out.println("4. Update Baggage Location");
+                System.out.println("4. Delete Claimed Baggage Record");
                 System.out.println("5. Logout");
                 String choice = InputUtil.readOption("Choose an option: ");
                 int baggageId;
@@ -62,7 +62,8 @@ public class Main {
                         baggageManagement.updateBaggageStatusAndLocation(baggageId, baggageStatus, baggageLocation);
                         break;
                     case "4":
-                        System.out.println("Update Baggage Location");
+                        baggageId = Integer.parseInt(InputUtil.readOption("Enter baggage id: "));
+                        baggageManagement.deleteClaimedBaggageRecord(baggageId);
                         break;
                     case "5":
                         loggedIn = false;

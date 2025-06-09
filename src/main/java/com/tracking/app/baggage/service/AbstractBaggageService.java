@@ -108,9 +108,29 @@ public abstract class AbstractBaggageService implements BaggageOperations {
             else {
                 System.out.println("The baggage status and location was updated successfully.");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error during baggage status and location update: " + e.getMessage());
             throw e;
+        }
+    }
+
+    public void deleteClaimedBaggage(Integer baggageId) throws SQLException{
+        String sql = "DELETE FROM baggage WHERE id = ? AND status = ?";
+        try (
+            Connection connection = Config.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setInt(1, baggageId);
+            preparedStatement.setString(2, "Claimed");
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("The baggage deletion failed as the status is not yet claimed or the baggage does not exists. Please try again later.");
+            }
+            else {
+                System.out.println("The baggage was deleted successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error during deleting baggage: " + e.getMessage());
         }
     }
 

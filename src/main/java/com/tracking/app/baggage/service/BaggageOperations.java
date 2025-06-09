@@ -8,4 +8,5 @@ public interface BaggageOperations {
     void getBaggageById(Integer id) throws SQLException;
     void getBaggageByIdAndUserId(Integer id, Integer userId) throws SQLException;
     void baggageStatusAndLocationUpdate(Integer id, String baggageStatus, String baggageLocation) throws SQLException;
+    void deleteClaimedBaggage(Integer id) throws SQLException;
 }
