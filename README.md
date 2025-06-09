@@ -90,6 +90,3 @@ After logging in as an admin, the following options are available:
 
 ### 7. License
 This project is open for educational and personal use.
-
-### 8. Author
-Developed by https://github.com/nadeemnagpurwala
