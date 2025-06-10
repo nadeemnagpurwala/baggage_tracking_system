@@ -48,7 +48,7 @@ CREATE TABLE baggage (
     status VARCHAR(50) NOT NULL,
     user_id INTEGER REFERENCES users(id)
 );
-
+```
 ### 2. Configure Database Connection
 
 Update the DB configuration in your Config.java file
