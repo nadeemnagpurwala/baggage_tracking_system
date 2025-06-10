@@ -53,10 +53,10 @@ CREATE TABLE baggage (
 
 Update the DB configuration in your Config.java file
 
-// Example:
-String url = "jdbc:postgresql://localhost:5432/your_database_name";
-String user = "your_username";
-String password = "your_password";
+- Example:
+    - String url = "jdbc:postgresql://localhost:5432/your_database_name";
+    - String user = "your_username";
+    - String password = "your_password";
 
 ### 3. Build and Run the Application
 
